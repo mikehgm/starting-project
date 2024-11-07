@@ -7,10 +7,26 @@ import { EXAMPLES } from './data.js'
 import './App.css'
 
 function App() {
-  let [ clickedTopic, setClickedTopic ] = useState('components');
+  let [ clickedTopic, setClickedTopic ] = useState();
 
   function handleCLick(clickedButton) {
     setClickedTopic(clickedButton);
+  }
+
+  let tabContent = <p>Please select a topic.</p>;
+
+  if (clickedTopic) {
+    tabContent = (
+    <div id='tab-content'>
+      <h3>{EXAMPLES[clickedTopic].title}</h3>
+      <p>{EXAMPLES[clickedTopic].description}</p>
+      <pre>
+        <code>
+          {EXAMPLES[clickedTopic].code}
+        </code>
+      </pre>
+    </div>
+    );
   }
 
   return (
@@ -20,30 +36,33 @@ function App() {
         <section id="core-concepts">
           <h2>Core Concepts</h2>
           <ul>
-            <CoreConcept {...CORE_CONCEPTS[0]}/>
-            <CoreConcept {...CORE_CONCEPTS[1]}/>
-            <CoreConcept {...CORE_CONCEPTS[2]}/>
-            <CoreConcept {...CORE_CONCEPTS[3]}/>
+            {CORE_CONCEPTS.map((concept)=> (
+              <CoreConcept key={concept.title} {...concept} />
+            ))}
           </ul>
         </section>
         <section id='examples'>
           <h2>Examples</h2>
           <menu>
-            <TabButton onClick={() => handleCLick('components')}>Components</TabButton>
-            <TabButton onClick={() => handleCLick('jsx')}>JSX</TabButton>
-            <TabButton onClick={() => handleCLick('props')}>Props</TabButton>
-            <TabButton onClick={() => handleCLick('state')}>State</TabButton>
+            <TabButton 
+              isClicked={clickedTopic === 'components'} 
+              onClick={() => handleCLick('components')}>Components
+            </TabButton>
+            <TabButton 
+              isClicked={clickedTopic === 'jsx'}
+              onClick={() => handleCLick('jsx')}>JSX
+            </TabButton>
+            <TabButton 
+              isClicked={clickedTopic === 'props'}
+              onClick={() => handleCLick('props')}>Props
+            </TabButton>
+            <TabButton 
+              isClicked={clickedTopic === 'state'}
+              onClick={() => handleCLick('state')}>State
+            </TabButton>
           </menu>
+          {tabContent}
         </section>
-        <div id='tab-content'>
-          <h3>{EXAMPLES[clickedTopic].title}</h3>
-          <p>{EXAMPLES[clickedTopic].description}</p>
-          <pre>
-            <code>
-              {EXAMPLES[clickedTopic].code}
-            </code>
-          </pre>
-        </div>
       </main>
     </>
   )
